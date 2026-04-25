@@ -91,7 +91,7 @@ That's it — no virtual environments or package installations needed.
 Run the script from your terminal:
 
 ```bash
-python file_organizer.py
+python main.py
 ```
 
 You will be prompted to enter the path to the folder you want to organize:
@@ -154,7 +154,7 @@ The utility follows a simple, linear workflow:
 ```
 file-management-utility/
 │
-├── file_organizer.py   # Main script
+├── main.py   # Main script
 └── README.md           # Project documentation
 ```
 
@@ -223,7 +223,7 @@ Downloads/
 
 ## 🛠️ Customization
 
-To add support for new file types or categories, simply edit the `file_types` dictionary at the top of `file_organizer.py`:
+To add support for new file types or categories, simply edit the `file_types` dictionary at the top of `main.py`:
 
 ```python
 file_types = {
@@ -257,3 +257,9 @@ Contributions are welcome! If you have ideas for improvements — such as recurs
 **Arshad**
 
 - GitHub: [@arshadMLdev](https://github.com/arshadMLdev)
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
