@@ -3,6 +3,7 @@ import shutil
 
 file_types = {
     '.jpg': 'Images',
+    '.jpeg': 'Images',
     '.png': 'Images',
     '.txt': 'Documents',
     '.pdf': 'Documents',
@@ -10,6 +11,8 @@ file_types = {
     '.xlsx': 'Data',
     '.mp3': 'Audio',
     '.wav': 'Audio',
+    '.aac': 'Audio',
+    '.m4a': 'Audio',
 }
 
 folder_path = input("Enter the folder path: ").strip()
