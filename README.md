@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 Table of Contents:
+## 📌 Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -27,13 +27,14 @@
 
 The **File Management Utility** is a command-line Python tool designed to help you bring order to disorganized folders. Whether it's your Downloads folder, a cluttered Desktop, or a shared project directory — this utility scans the target folder and automatically moves files into categorized subdirectories based on their file extensions.
 
-It handles edge cases gracefully: hidden files are ignored, existing subdirectories are skipped, files with unknown extensions are grouped into an `Others` folder, and files that already exist at the destination are left untouched to prevent accidental overwrites.
+It handles edge cases gracefully: hidden files are ignored, existing subdirectories are skipped, files with unknown extensions are grouped into an `Others` folder, and files that already exist at the destination are left untouched to prevent accidental overwrites. At the end of every run, a clean summary report tells you exactly how many files were moved per category.
 
 ---
 
 ## ✨ Features
 
-- **Automatic categorization** — Files are sorted into folders like `Images`, `Documents`, `Data`, `Audio`, and `Others` based on their extension.
+- **Automatic categorization** — Files are sorted into folders like `Images`, `Documents`, `Data`, `Audio`, `Videos`, `Archives`, `Code`, `Fonts`, and `Others` based on their extension.
+- **Summary report** — After every run, a formatted breakdown shows how many files were moved into each category and how many were skipped.
 - **Safe operation** — Files already present at the destination path are never overwritten.
 - **Hidden file protection** — Files beginning with `.` (e.g., `.DS_Store`, `.gitignore`) are automatically skipped.
 - **Directory-aware** — Subdirectories inside the target folder are left completely untouched.
@@ -45,13 +46,17 @@ It handles edge cases gracefully: hidden files are ignored, existing subdirector
 
 ## 📂 Supported File Types
 
-| Extension | Category |
-|-----------|----------|
-| `.jpg`, `.png` | Images |
-| `.txt`, `.pdf` | Documents |
-| `.csv`, `.xlsx` | Data |
-| `.mp3`, `.wav` | Audio |
-| *(anything else)* | Others |
+| Category | Extensions |
+|----------|------------|
+| Images | `.jpg`, `.jpeg`, `.png`, `.gif`, `.bmp`, `.svg`, `.webp` |
+| Documents | `.txt`, `.pdf`, `.doc`, `.docx`, `.ppt`, `.pptx` |
+| Data | `.csv`, `.xlsx`, `.xls`, `.json`, `.xml` |
+| Audio | `.mp3`, `.wav`, `.aac`, `.flac`, `.ogg` |
+| Videos | `.mp4`, `.mov`, `.avi`, `.mkv`, `.wmv`, `.flv`, `.webm` |
+| Archives | `.zip`, `.tar`, `.rar`, `.7z`, `.gz`, `.bz2` |
+| Code | `.py`, `.js`, `.html`, `.css`, `.ts`, `.jsx`, `.tsx`, `.java`, `.c`, `.cpp`, `.cs`, `.php`, `.rb`, `.go`, `.sh`, `.sql` |
+| Fonts | `.ttf`, `.otf`, `.woff`, `.woff2`, `.eot` |
+| Others | *(any unrecognized extension)* |
 
 > You can easily extend this list — see the [Customization](#customization) section.
 
@@ -95,14 +100,36 @@ You will be prompted to enter the path to the folder you want to organize:
 Enter the folder path: /Users/arshad/Downloads
 ```
 
-The utility will then scan the folder and move files into their respective category subfolders, printing a log of every action taken:
+The utility will then scan the folder, move files into their respective category subfolders, and print a summary report at the end:
 
 ```
-Moved: report.pdf → Documents
+Moved: resume.pdf → Documents
 Moved: photo_2024.jpg → Images
 Moved: sales_data.csv → Data
 Moved: podcast_episode.mp3 → Audio
-Moved: random_file.zip → Others
+Moved: demo_video.mp4 → Videos
+Moved: project_backup.zip → Archives
+Moved: index.html → Code
+Moved: helvetica.ttf → Fonts
+Moved: random_file.xyz → Others
+Skipped (already exists): old_notes.txt
+
+========================================
+         ORGANIZATION SUMMARY
+========================================
+  Archives        1 file(s)
+  Audio           1 file(s)
+  Code            1 file(s)
+  Data            1 file(s)
+  Documents       1 file(s)
+  Fonts           1 file(s)
+  Images          1 file(s)
+  Others          1 file(s)
+  Videos          1 file(s)
+----------------------------------------
+  Total moved     9 file(s)
+  Skipped         1 file(s)
+========================================
 ```
 
 ---
@@ -115,9 +142,10 @@ The utility follows a simple, linear workflow:
 2. **Directory scan** — `os.listdir()` retrieves all entries in the folder.
 3. **Filtering** — Each entry is checked: hidden files (starting with `.`) and subdirectories (`os.path.isdir()`) are skipped.
 4. **Extension detection** — `os.path.splitext()` extracts the file extension, which is normalized to lowercase.
-5. **Category lookup** — The extension is matched against the `file_types` dictionary. If no match is found, the file is assigned to the `Others` category.
+5. **Category lookup** — The extension is matched against the `file_types` dictionary using `.get()`. If no match is found, the file is assigned to the `Others` category.
 6. **Destination creation** — `os.makedirs(..., exist_ok=True)` creates the target subfolder if it doesn't already exist.
-7. **Safe move** — `os.path.exists()` is used to check whether the file already exists at the destination before calling `shutil.move()`, preventing overwrites.
+7. **Safe move** — `os.path.exists()` checks whether the file already exists at the destination before calling `shutil.move()`, preventing overwrites.
+8. **Summary report** — After all files are processed, a formatted table displays the count of files moved per category and the total skipped count.
 
 ---
 
@@ -136,22 +164,14 @@ After running the utility on a folder, the output structure will look something 
 target-folder/
 │
 ├── Images/
-│   ├── photo.jpg
-│   └── screenshot.png
-│
 ├── Documents/
-│   ├── notes.txt
-│   └── resume.pdf
-│
 ├── Data/
-│   ├── report.csv
-│   └── budget.xlsx
-│
 ├── Audio/
-│   └── recording.mp3
-│
+├── Videos/
+├── Archives/
+├── Code/
+├── Fonts/
 └── Others/
-    └── archive.zip
 ```
 
 ---
@@ -167,6 +187,10 @@ Downloads/
 ├── dataset_2024.csv
 ├── meeting_notes.txt
 ├── background_music.mp3
+├── demo_reel.mp4
+├── project_backup.zip
+├── index.html
+├── helvetica.ttf
 └── setup_installer.exe
 ```
 
@@ -183,6 +207,14 @@ Downloads/
 │   └── dataset_2024.csv
 ├── Audio/
 │   └── background_music.mp3
+├── Videos/
+│   └── demo_reel.mp4
+├── Archives/
+│   └── project_backup.zip
+├── Code/
+│   └── index.html
+├── Fonts/
+│   └── helvetica.ttf
 └── Others/
     └── setup_installer.exe
 ```
@@ -195,24 +227,16 @@ To add support for new file types or categories, simply edit the `file_types` di
 
 ```python
 file_types = {
-    '.jpg': 'Images',
-    '.png': 'Images',
-    '.gif': 'Images',        # ← Add new extensions like this
-    '.txt': 'Documents',
-    '.pdf': 'Documents',
-    '.docx': 'Documents',    # ← Add a new extension to an existing category
-    '.csv': 'Data',
-    '.xlsx': 'Data',
-    '.mp3': 'Audio',
-    '.wav': 'Audio',
-    '.mp4': 'Videos',        # ← Or create an entirely new category
-    '.mov': 'Videos',
-    '.zip': 'Archives',      # ← Another new category
-    '.tar': 'Archives',
+    # Add a new extension to an existing category
+    '.tiff': 'Images',
+
+    # Or create a brand new category
+    '.epub': 'Ebooks',
+    '.mobi': 'Ebooks',
 }
 ```
 
-No other changes to the script are required.
+No other changes to the script are required. The new category folder will be created automatically on the next run.
 
 ---
 
@@ -232,6 +256,4 @@ Contributions are welcome! If you have ideas for improvements — such as recurs
 
 **Arshad**
 
-- GitHub:(https://github.com/arshadMLdev)
-
----
+- GitHub: [@arshadMLdev](https://github.com/arshadMLdev)
